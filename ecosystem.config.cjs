@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "my-app",
       script: "npm",
-      args: "run preview",
+      args: "run preview -- --host --port 5000",
       interpreter: "none",
       env: {
         NODE_ENV: "production",

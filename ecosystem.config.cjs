@@ -11,6 +11,7 @@ module.exports = {
       instances: 1,
       autorestart: true,
       watch: false,
+      post_deploy: ["npm install", "npm run build"],
       max_memory_restart: "1G",
     },
   ],

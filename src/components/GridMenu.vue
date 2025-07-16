@@ -9,12 +9,18 @@ interface Props {
 defineProps<Props>()
 
 onBeforeRouteLeave(async (to, from, next) => {
-  await animateStartBlocksHide(document.querySelectorAll('.grid-menu-block'))
+  await animateStartBlocksHide(
+    document.querySelectorAll('.grid-menu-block'),
+    document.querySelector('.home-button')!
+  )
   next()
 })
 
 onMounted(async () => {
-  await animateStartBlocksShow(document.querySelectorAll('.grid-menu-block'))
+  await animateStartBlocksShow(
+    document.querySelectorAll('.grid-menu-block'),
+    document.querySelector('.home-button')!
+  )
 })
 </script>
 
@@ -29,6 +35,14 @@ onMounted(async () => {
     >
       <SvgIcon :name="item.icon" class="grid-menu-block-icon" />
     </RouterLink>
+    <RouterLink 
+      to="/"
+      class="home-button"
+    >
+      <div class="home-button-inner">
+        <SvgIcon name="home" class="grid-menu-block-icon" />
+      </div>
+    </RouterLink>
   </div>
 </template>
 
@@ -42,6 +56,7 @@ onMounted(async () => {
   padding: 32px;
   min-height: 80vh;
   place-content: center;
+  position: relative;
 }
 
 .grid-menu-block {
@@ -77,6 +92,33 @@ onMounted(async () => {
   color: #fff;
   width: 32px;
   height: 32px;
+}
+
+.home-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  text-decoration: none;
+  z-index: 1;
+  background-color: #FFD600;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+  background-color: #FFC400;
+}
+
+.home-button-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-block {

@@ -1,39 +1,39 @@
 <script setup lang="ts">
 import { animateStartBlocksHide, animateStartBlocksShow } from '@/animation/start'
+import type { MenuItem } from '@/config/menu'
 
-const menuItems = [
-  { path: '/profile', icon: 'profile', class: 'profile-block' },
-  { path: '/settings', icon: 'settings', class: 'settings-block' },
-  { path: '/dashboard', icon: 'dashboard', class: 'dashboard-block' },
-  { path: '/help', icon: 'help', class: 'help-block' }
-]
+interface Props {
+  items: MenuItem[]
+}
+
+defineProps<Props>()
 
 onBeforeRouteLeave(async (to, from, next) => {
-  await animateStartBlocksHide(document.querySelectorAll('.start-block'))
+  await animateStartBlocksHide(document.querySelectorAll('.grid-menu-block'))
   next()
 })
 
 onMounted(async () => {
-  await animateStartBlocksShow(document.querySelectorAll('.start-block'))
+  await animateStartBlocksShow(document.querySelectorAll('.grid-menu-block'))
 })
 </script>
 
 <template>
-  <div class="start-container">
+  <div class="grid-menu-container">
     <RouterLink 
-      v-for="item in menuItems" 
+      v-for="item in items" 
       :key="item.path"
       :to="item.path" 
-      class="start-block"
+      class="grid-menu-block"
       :class="item.class"
     >
-      <SvgIcon :name="item.icon" class="start-block-icon" />
+      <SvgIcon :name="item.icon" class="grid-menu-block-icon" />
     </RouterLink>
   </div>
 </template>
 
 <style scoped>
-.start-container {
+.grid-menu-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2px;
@@ -44,7 +44,7 @@ onMounted(async () => {
   place-content: center;
 }
 
-.start-block {
+.grid-menu-block {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,23 +57,23 @@ onMounted(async () => {
   will-change: transform;
 }
 
-.start-block:nth-child(1) {
+.grid-menu-block:nth-child(1) {
   border-radius: 50% 8px 8px 8px;
 }
 
-.start-block:nth-child(2) {
+.grid-menu-block:nth-child(2) {
   border-radius: 8px 50% 8px 8px;
 }
 
-.start-block:nth-child(3) {
+.grid-menu-block:nth-child(3) {
   border-radius: 8px 8px 8px 50%;
 }
 
-.start-block:nth-child(4) {
+.grid-menu-block:nth-child(4) {
   border-radius: 8px 8px 50% 8px;
 }
 
-.start-block-icon {
+.grid-menu-block-icon {
   color: #fff;
   width: 32px;
   height: 32px;
@@ -111,11 +111,11 @@ onMounted(async () => {
   background-color: #2962FF;
 }
 
-.start-block:hover {
+.grid-menu-block:hover {
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
-.start-block:hover .start-block-icon {
+.grid-menu-block:hover .grid-menu-block-icon {
   opacity: 1;
 }
-</style>
+</style> 

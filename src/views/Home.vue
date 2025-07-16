@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import Start from '../components/Start.vue'
+import { menuItems } from '@/config/menu'
 </script>
 
 <template>
-  <Start />
+  <main>
+    <GridMenu :items="menuItems" />
+  </main>
 </template>

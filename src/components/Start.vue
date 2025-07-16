@@ -1,12 +1,8 @@
 <script setup lang="ts">
-defineOptions({
-  name: 'StartPage'
-})
-
-import { RouterLink, onBeforeRouteLeave } from 'vue-router'
 import SvgIcon from './ui/SvgIcon.vue'
+import { RouterLink, onBeforeRouteLeave } from 'vue-router'
 import { onMounted } from 'vue'
-import gsap from 'gsap'
+import { animateStartBlocksHide, animateStartBlocksShow } from '@/animation/start'
 
 const menuItems = [
   { path: '/profile', icon: 'profile', class: 'profile-block' },
@@ -15,38 +11,13 @@ const menuItems = [
   { path: '/help', icon: 'help', class: 'help-block' }
 ]
 
-onBeforeRouteLeave((to, from, next) => {
-  const blocks = document.querySelectorAll('.start-block')
-  
-  blocks.forEach((block, index) => {
-    const origins = ['right bottom', 'left bottom', 'right top', 'left top']
-    gsap.set(block, { transformOrigin: origins[index] })
-  })
-
-  gsap.to('.start-block', {
-    scale: 0,
-    opacity: 0,
-    duration: 0.3,
-    stagger: 0.08,
-    onComplete: () => next()
-  })
+onBeforeRouteLeave(async (to, from, next) => {
+  await animateStartBlocksHide(document.querySelectorAll('.start-block'))
+  next()
 })
 
-onMounted(() => {
-  const blocks = document.querySelectorAll('.start-block')
-  
-  blocks.forEach((block, index) => {
-    const origins = ['right bottom', 'left bottom', 'right top', 'left top']
-    gsap.set(block, { transformOrigin: origins[index] })
-  })
-
-  gsap.from('.start-block', {
-    scale: 0,
-    opacity: 0,
-    duration: 0.5,
-    stagger: 0.08,
-    // ease: 'back.out(1.7)'
-  })
+onMounted(async () => {
+  await animateStartBlocksShow(document.querySelectorAll('.start-block'))
 })
 </script>
 
@@ -85,7 +56,7 @@ onMounted(() => {
   border-radius: 8px;
   text-decoration: none;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  transition: box-shadow 0.3s ease;
+  transition: background-color 0.3s ease;
   will-change: transform;
 }
 

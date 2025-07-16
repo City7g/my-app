@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import SvgIcon from './ui/SvgIcon.vue'
-import { RouterLink, onBeforeRouteLeave } from 'vue-router'
-import { onMounted } from 'vue'
 import { animateStartBlocksHide, animateStartBlocksShow } from '@/animation/start'
 
 const menuItems = [

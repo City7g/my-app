@@ -51,7 +51,7 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2px;
-  max-width: 400px;
+  max-width: 200px;
   margin: 0 auto;
   padding: 32px;
   min-height: 80vh;

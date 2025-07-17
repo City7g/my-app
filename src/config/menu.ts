@@ -13,7 +13,7 @@ export const menuItems: MenuItem[] = [
 
 export const addMenuItems: MenuItem[] = [
   { path: "/add/food", icon: "food", class: "food-block" },
-  { path: "/add/travel", icon: "travel", class: "travel-block" },
+  { path: "/add/transport", icon: "travel", class: "transport-block" },
   { path: "/add/shopping", icon: "shopping", class: "shopping-block" },
   { path: "/add/entertainment", icon: "entertainment", class: "entertainment-block" },
 ];

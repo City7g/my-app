@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { addMenuItems } from '@/config/menu'
+
+defineOptions({
+  name: 'AddPage'
+})
 </script>
 
 <template>
   <main>
+    <TotalSpent />
     <GridMenu :items="addMenuItems" />
   </main>
 </template>
@@ -17,11 +22,11 @@ import { addMenuItems } from '@/config/menu'
   background-color: #388E3C;
 }
 
-.travel-block {
+.transport-block {
   background-color: #03A9F4;
 }
 
-.travel-block:hover {
+.transport-block:hover {
   background-color: #0288D1;
 }
 

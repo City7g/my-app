@@ -5,7 +5,7 @@ import { menuItems } from '@/config/menu'
 <template>
   <main>
     <TotalSpent />
-    <GridMenu :items="menuItems" />
+    <GridMenu :items='menuItems' />
   </main>
 </template>
 
@@ -14,6 +14,7 @@ main {
   max-width: 1200px;
   margin: 0 auto;
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 }

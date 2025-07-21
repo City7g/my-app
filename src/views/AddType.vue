@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import PriceRange from '@/components/PriceRange.vue'
 import { useExpensesStore } from '@/stores/expenses'
 
 const route = useRoute()
@@ -8,37 +11,33 @@ const expensesStore = useExpensesStore()
 const type = route.params.type
 const price = ref(500)
 const description = ref('')
-const showSuccess = ref(false)
 
 const handleSubmit = () => {
-  expensesStore.createExpense(
-    type as string,
-    price.value,
-    description.value
-  )
+  expensesStore.createExpense({
+    type: type as string,
+    price: price.value,
+    description: description.value
+  })
 
   router.push('/add')
 }
 </script>
 
 <template>
-  <div class='add-type'>
+  <div class="add-type">
     <h1>Добавление {{ type }}</h1>
-    <div class='add-type-form'>
-      <div class='form-section'>
+    <div class="add-type-form">
+      <div class="form-section">
         <h2>Стоимость</h2>
-        <PriceRange v-model='price' :min='0' :max='1000' :step='1' />
+        <PriceRange v-model="price" :min="0" :max="1000" :step="1" />
       </div>
-      <div class='form-section'>
+      <div class="form-section">
         <h2>Описание</h2>
-        <textarea v-model='description' class='description-input' placeholder='Введите описание...' rows='4' />
+        <textarea v-model="description" class="description-input" placeholder="Введите описание..." rows="4" />
       </div>
-      <div class='form-section form-actions'>
-        <div class='action-container'>
-          <div v-if='showSuccess' class='success-message'>
-            ✓ Успешно сохранено
-          </div>
-          <button @click='handleSubmit' class='submit-button'>
+      <div class="form-section form-actions">
+        <div class="action-container">
+          <button @click="handleSubmit" class="submit-button">
             Подтвердить
           </button>
         </div>
@@ -53,7 +52,6 @@ const handleSubmit = () => {
   margin: 0 auto;
   padding: 24px;
 }
-
 
 h1 {
   font-size: 24px;
@@ -113,14 +111,6 @@ h2 {
   display: flex;
   align-items: center;
   gap: 16px;
-}
-
-.success-message {
-  color: #4CAF50;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .submit-button {

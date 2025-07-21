@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { addMenuItems } from '@/config/menu'
-
-defineOptions({
-  name: 'AddPage'
-})
 </script>
 
 <template>
   <main>
     <TotalSpent />
-    <GridMenu :items="addMenuItems" />
+    <GridMenu :items='addMenuItems' />
   </main>
 </template>
 
@@ -45,4 +41,4 @@ defineOptions({
 .entertainment-block:hover {
   background-color: #F57C00;
 }
-</style> 
+</style>

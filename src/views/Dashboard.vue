@@ -1,40 +1,25 @@
 <script setup lang="ts">
-defineOptions({
-  name: 'ExpensesDashboard'
-})
+import { useExpensesStore } from '@/stores/expenses'
+import { computed } from 'vue'
+import type { Expense } from '@/types/expense'
 
-import { ref, onMounted, computed } from 'vue'
-
-interface Expense {
-  id: string
-  type: string
-  price: number
-  description: string
-  createdAt: string
-}
+const expensesStore = useExpensesStore()
 
 interface ExpenseGroup {
   type: string
-  total: number
   expenses: Expense[]
 }
 
-const expenses = ref<Expense[]>([])
-
-const loadExpenses = () => {
-  const storedItems = localStorage.getItem('items')
-  if (storedItems) {
-    expenses.value = JSON.parse(storedItems)
-  }
-}
-
-const deleteExpense = (id: string) => {
-  expenses.value = expenses.value.filter(expense => expense.id !== id)
-  localStorage.setItem('items', JSON.stringify(expenses.value))
-}
+const expenseGroups = computed<ExpenseGroup[]>(() => {
+  const groupedExpenses = expensesStore.expensesByType
+  return Object.entries(groupedExpenses).map(([type, expenses]) => ({
+    type,
+    expenses
+  }))
+})
 
 const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString('ru-RU', {
+  return new Date(dateString).toLocaleDateString('uk-UA', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric'
@@ -42,70 +27,43 @@ const formatDate = (dateString: string): string => {
 }
 
 const formatPrice = (value: number): string => {
-  // Преобразуем число в строку и разбиваем на группы по 3 цифры
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+  return value.toLocaleString('uk-UA', {
+    style: 'currency',
+    currency: 'UAH'
+  })
 }
-
-const getTotalExpenses = computed((): string => {
-  const total = expenses.value.reduce((sum, expense) => sum + +expense.price, 0)
-  return formatPrice(total)
-})
-
-const groupedExpenses = computed((): ExpenseGroup[] => {
-  const groups = expenses.value.reduce((acc, expense) => {
-    if (!acc[expense.type]) {
-      acc[expense.type] = {
-        type: expense.type,
-        total: 0,
-        expenses: []
-      }
-    }
-    acc[expense.type].total += expense.price
-    acc[expense.type].expenses.push(expense)
-    return acc
-  }, {} as Record<string, ExpenseGroup>)
-
-  return Object.values(groups)
-})
-
-onMounted(() => {
-  loadExpenses()
-})
 </script>
 
 <template>
   <div class="dashboard">
     <div class="dashboard-header">
-      <h1>Расходы - {{ getTotalExpenses }}</h1>
+      <h1>Расходы - {{ formatPrice(expensesStore.totalSpent) }}</h1>
     </div>
 
-    <div v-if="expenses.length" class="expense-groups">
-      <div 
-        v-for="group in groupedExpenses" 
-        :key="group.type" 
-        class="expense-group"
-        :class="group.type.toLowerCase()"
-      >
+    <div v-if="expensesStore.items.length" class="expense-groups">
+      <div v-for="group in expenseGroups" :key="group.type" class="expense-group" :class="group.type.toLowerCase()">
         <div class="group-header">
           <div class="group-title-wrapper">
             <div class="group-icon">
-              <img :src="`/src/assets/icons/${group.type.toLowerCase()}.svg`" :alt="group.type">
+              <img :src="`/src/assets/icons/${group.type.toLowerCase()}.svg`" :alt="group.type" />
             </div>
             <h2 class="group-title">{{ group.type }}</h2>
           </div>
           <div class="group-total">
-            {{ formatPrice(group.expenses.reduce((sum, expense) => sum + Number(expense.price), 0)) }}
+            {{formatPrice(group.expenses.reduce((sum: number, expense) => sum + +expense.price, 0))}}
           </div>
         </div>
-        
+
         <div class="expenses-list">
           <div v-for="expense in group.expenses" :key="expense.id" class="expense-item">
             <div class="expense-info">
               <div class="expense-amount">{{ formatPrice(expense.price) }}</div>
               <div class="expense-date">{{ formatDate(expense.createdAt) }}</div>
-              <div v-if="expense.description" class="expense-description">{{ expense.description }}</div>
+              <div v-if="expense.description" class="expense-description">
+                {{ expense.description }}
+              </div>
             </div>
-            <button @click="deleteExpense(expense.id)" class="delete-button" title="Удалить">
+            <button @click="expensesStore.removeExpense(expense.id)" class="delete-button">
               ✕
             </button>
           </div>
@@ -316,4 +274,4 @@ h1 {
   margin-top: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-</style> 
+</style>

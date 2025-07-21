@@ -1,69 +1,69 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import type { Expense } from "@/types/expense";
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import type { CreateExpenseParams, Expense } from '@/types/expense'
 
-const generateId = () => Math.random().toString(36).substring(2);
+const generateId = () => Math.random().toString(36).substring(2)
 
-export const useExpensesStore = defineStore("expenses", () => {
-  const items = ref<Expense[]>([]);
+export const useExpensesStore = defineStore('expenses', () => {
+  const items = ref<Expense[]>([])
 
   function initializeFromLocalStorage() {
-    const storedItems = localStorage.getItem("items");
+    const storedItems = localStorage.getItem('items')
     if (storedItems) {
-      items.value = JSON.parse(storedItems);
+      items.value = JSON.parse(storedItems)
     }
   }
 
-  initializeFromLocalStorage();
+  initializeFromLocalStorage()
 
-  function createExpense(type: string, price: number, description: string): Expense {
+  const createExpense = ({ type, price, description }: CreateExpenseParams): Expense => {
     const newItem: Expense = {
       id: generateId(),
       type,
       price,
       description,
       createdAt: new Date().toISOString(),
-    };
+    }
 
-    addExpense(newItem);
-    return newItem;
+    addExpense(newItem)
+    return newItem
   }
 
-  function addExpense(expense: Expense) {
-    items.value.push(expense);
-    saveToLocalStorage();
+  const addExpense = (expense: Expense) => {
+    items.value.push(expense)
+    saveToLocalStorage()
   }
 
-  function removeExpense(id: string) {
-    items.value = items.value.filter((item) => item.id !== id);
-    saveToLocalStorage();
+  const removeExpense = (id: string) => {
+    items.value = items.value.filter((item) => item.id !== id)
+    saveToLocalStorage()
   }
 
-  function saveToLocalStorage() {
-    localStorage.setItem("items", JSON.stringify(items.value));
+  const saveToLocalStorage = () => {
+    localStorage.setItem('items', JSON.stringify(items.value))
   }
 
   const totalSpent = computed(() => {
-    return items.value.reduce((total, item) => total + +item.price, 0);
-  });
+    return items.value.reduce((total, item) => total + +item.price, 0)
+  })
 
   const expensesByType = computed(() => {
     return items.value.reduce((grouped, item) => {
       if (!grouped[item.type]) {
-        grouped[item.type] = [];
+        grouped[item.type] = []
       }
-      grouped[item.type].push(item);
-      return grouped;
-    }, {} as Record<string, Expense[]>);
-  });
+      grouped[item.type].push(item)
+      return grouped
+    }, {} as Record<string, Expense[]>)
+  })
 
-  function getExpensesByDateRange(startDate: Date, endDate: Date) {
+  const getExpensesByDateRange = (startDate: Date, endDate: Date) => {
     return computed(() => {
       return items.value.filter((item) => {
-        const itemDate = new Date(item.createdAt);
-        return itemDate >= startDate && itemDate <= endDate;
-      });
-    });
+        const itemDate = new Date(item.createdAt)
+        return itemDate >= startDate && itemDate <= endDate
+      })
+    })
   }
 
   return {
@@ -75,5 +75,5 @@ export const useExpensesStore = defineStore("expenses", () => {
     totalSpent,
     expensesByType,
     getExpensesByDateRange,
-  };
-});
+  }
+})

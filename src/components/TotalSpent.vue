@@ -1,39 +1,26 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { useExpensesStore } from '@/stores/expenses'
 
-const totalAmount = ref(0)
+const expensesStore = useExpensesStore()
 
 const formatPrice = (value: number): string => {
   const formattedNumber = new Intl.NumberFormat('uk-UA', {
     maximumFractionDigits: 0,
     minimumFractionDigits: 0
   }).format(value)
-  
+
   return `${formattedNumber} ₴`
 }
-
-const calculateTotal = () => {
-  const items = JSON.parse(localStorage.getItem('items') || '[]')
-  totalAmount.value = items.reduce((sum: number, item: { price: number }) => {
-    const itemPrice = Math.round(Number(item.price))
-    return sum + itemPrice
-  }, 0)
-}
-
-onMounted(() => {
-  calculateTotal()
-  window.addEventListener('storage', calculateTotal)
-})
 </script>
 
 <template>
-  <div class="total-spent">
-    <div class="total-spent-card">
-      <div class="total-spent-title">
+  <div class='total-spent'>
+    <div class='total-spent-card'>
+      <div class='total-spent-title'>
         Всего потрачено:
       </div>
-      <div class="total-spent-amount">
-        {{ formatPrice(totalAmount) }}
+      <div class='total-spent-amount'>
+        {{ formatPrice(expensesStore.totalSpent) }}
       </div>
     </div>
   </div>
@@ -73,4 +60,4 @@ onMounted(() => {
   font-size: 18px;
   font-weight: 600;
 }
-</style> 
+</style>

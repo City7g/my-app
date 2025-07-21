@@ -1,81 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import PriceRange from '@/components/PriceRange.vue'
+import { useExpensesStore } from '@/stores/expenses'
 
 const route = useRoute()
 const router = useRouter()
+const expensesStore = useExpensesStore()
+
 const type = route.params.type
 const price = ref(500)
 const description = ref('')
 const showSuccess = ref(false)
 
-interface Item {
-  id: string
-  type: string
-  price: number
-  description: string
-  createdAt: string
-}
-
 const handleSubmit = () => {
-  // Создаем новую запись
-  const newItem: Item = {
-    id: crypto.randomUUID(),
-    type: type as string,
-    price: price.value,
-    description: description.value,
-    createdAt: new Date().toISOString()
-  }
+  expensesStore.createExpense(
+    type as string,
+    price.value,
+    description.value
+  )
 
-  // Получаем существующие записи или создаем новый массив
-  const existingItems = JSON.parse(localStorage.getItem('items') || '[]')
-  
-  // Добавляем новую запись
-  existingItems.push(newItem)
-  
-  // Сохраняем обратно в localStorage
-  localStorage.setItem('items', JSON.stringify(existingItems))
-
-  // Показываем сообщение об успехе
-  showSuccess.value = true
-
-  // Скрываем сообщение через 2 секунды и редиректим
-  setTimeout(() => {
-    showSuccess.value = false
-    router.push('/add')
-  }, 2000)
+  router.push('/add')
 }
 </script>
 
 <template>
-  <div class="add-type">
+  <div class='add-type'>
     <h1>Добавление {{ type }}</h1>
-    <div class="add-type-form">
-      <div class="form-section">
+    <div class='add-type-form'>
+      <div class='form-section'>
         <h2>Стоимость</h2>
-        <PriceRange
-          v-model="price"
-          :min="0"
-          :max="1000"
-          :step="10"
-        />
+        <PriceRange v-model='price' :min='0' :max='1000' :step='1' />
       </div>
-      <div class="form-section">
+      <div class='form-section'>
         <h2>Описание</h2>
-        <textarea
-          v-model="description"
-          class="description-input"
-          placeholder="Введите описание..."
-          rows="4"
-        ></textarea>
+        <textarea v-model='description' class='description-input' placeholder='Введите описание...' rows='4' />
       </div>
-      <div class="form-section form-actions">
-        <div class="action-container">
-          <div v-if="showSuccess" class="success-message">
+      <div class='form-section form-actions'>
+        <div class='action-container'>
+          <div v-if='showSuccess' class='success-message'>
             ✓ Успешно сохранено
           </div>
-          <button @click="handleSubmit" class="submit-button">
+          <button @click='handleSubmit' class='submit-button'>
             Подтвердить
           </button>
         </div>
@@ -180,4 +143,4 @@ h2 {
 .submit-button:active {
   transform: translateY(0);
 }
-</style> 
+</style>

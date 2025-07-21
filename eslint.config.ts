@@ -1,28 +1,45 @@
-import { globalIgnores } from 'eslint/config'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import pluginVue from 'eslint-plugin-vue'
-import pluginVitest from '@vitest/eslint-plugin'
-import pluginOxlint from 'eslint-plugin-oxlint'
-
-// To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
-// import { configureVueProject } from '@vue/eslint-config-typescript'
-// configureVueProject({ scriptLangs: ['ts', 'tsx'] })
-// More info at https://github.com/vuejs/eslint-config-typescript/#advanced-setup
+import { globalIgnores } from "eslint/config";
+import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
+import pluginVue from "eslint-plugin-vue";
+import pluginVitest from "@vitest/eslint-plugin";
+import pluginOxlint from "eslint-plugin-oxlint";
 
 export default defineConfigWithVueTs(
   {
-    name: 'app/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
+    name: "app/files-to-lint",
+    files: ["**/*.{ts,mts,tsx,vue}"],
+    rules: {
+      quotes: ["error", "single", { avoidEscape: true }],
+      "vue/html-quotes": ["error", "single", { avoidEscape: true }],
+      semi: ["error", "never"],
+      "vue/max-attributes-per-line": [
+        "error",
+        {
+          singleline: 3,
+          multiline: 1,
+        },
+      ],
+      "vue/html-self-closing": [
+        "error",
+        {
+          html: {
+            void: "always",
+            normal: "always",
+            component: "always",
+          },
+        },
+      ],
+    },
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  globalIgnores(["**/dist/**", "**/dist-ssr/**", "**/coverage/**"]),
 
-  pluginVue.configs['flat/essential'],
+  pluginVue.configs["flat/essential"],
   vueTsConfigs.recommended,
-  
+
   {
     ...pluginVitest.configs.recommended,
-    files: ['src/**/__tests__/*'],
+    files: ["src/**/__tests__/*"],
   },
-  ...pluginOxlint.configs['flat/recommended'],
-)
+  ...pluginOxlint.configs["flat/recommended"]
+);

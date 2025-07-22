@@ -43,7 +43,8 @@ onMounted(async () => {
   max-width: 200px;
   margin: 0 auto;
   padding: 32px;
-  min-height: 80vh;
+  min-height: 100vh;
+  min-height: 100svh;
   place-content: center;
   position: relative;
 }

@@ -16,7 +16,7 @@ export default defineConfigWithVueTs(
         'error',
         {
           singleline: 3,
-          multiline: 1,
+          multiline: 3,
         },
       ],
       'vue/html-self-closing': [

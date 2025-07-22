@@ -1,23 +1,9 @@
 <script setup lang="ts">
 import { useExpensesStore } from '@/stores/expenses'
-import { computed } from 'vue'
-import type { Expense } from '@/types/expense'
 import { formatDate, formatPrice } from '@/utils/formaters'
+import type { Expense } from '@/types/expense'
 
 const expensesStore = useExpensesStore()
-
-interface ExpenseGroup {
-  type: string
-  expenses: Expense[]
-}
-
-const expenseGroups = computed<ExpenseGroup[]>(() => {
-  const groupedExpenses = expensesStore.expensesByType
-  return Object.entries(groupedExpenses).map(([type, expenses]) => ({
-    type,
-    expenses
-  }))
-})
 </script>
 
 <template>
@@ -27,21 +13,22 @@ const expenseGroups = computed<ExpenseGroup[]>(() => {
     </div>
 
     <div v-if="expensesStore.items.length" class="expense-groups">
-      <div v-for="group in expenseGroups" :key="group.type" class="expense-group" :class="group.type.toLowerCase()">
+      <div v-for="(expenses, type) in expensesStore.expensesByType" :key="type" class="expense-group"
+        :class="type.toLowerCase()">
         <div class="group-header">
           <div class="group-title-wrapper">
             <div class="group-icon">
-              <img :src="`/src/assets/icons/${group.type.toLowerCase()}.svg`" :alt="group.type" />
+              <img :src="`/src/assets/icons/${type.toLowerCase()}.svg`" :alt="type" />
             </div>
-            <h2 class="group-title">{{ group.type }}</h2>
+            <h2 class="group-title">{{ type }}</h2>
           </div>
           <div class="group-total">
-            {{formatPrice(group.expenses.reduce((sum: number, expense) => sum + +expense.price, 0))}}
+            {{formatPrice(expenses.reduce((sum: number, expense: Expense) => sum + +expense.price, 0))}}
           </div>
         </div>
 
         <div class="expenses-list">
-          <div v-for="expense in group.expenses" :key="expense.id" class="expense-item">
+          <div v-for="expense in expenses" :key="expense.id" class="expense-item">
             <div class="expense-info">
               <div class="expense-amount">{{ formatPrice(expense.price) }}</div>
               <div class="expense-date">{{ formatDate(expense.createdAt) }}</div>

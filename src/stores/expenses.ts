@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { Expense, CreateExpenseParams, ExpenseGroup } from '@/types/expense'
+import type { Expense, CreateExpenseParams } from '@/types/expense'
 import * as expenseService from '@/services/localStorageService'
 
 const generateId = () => Math.random().toString(36).substring(2)
@@ -11,8 +11,6 @@ export const useExpensesStore = defineStore('expenses', () => {
   const getExpenses = () => {
     items.value = expenseService.getExpenses()
   }
-
-  getExpenses()
 
   const createExpense = ({ type, price, description }: CreateExpenseParams): void => {
     const newItem: Expense = {
@@ -36,22 +34,11 @@ export const useExpensesStore = defineStore('expenses', () => {
     return items.value.reduce((total, item) => total + +item.price, 0)
   })
 
-  const expensesByType = computed(() => {
-    return items.value.reduce((grouped, item) => {
-      if (!grouped[item.type]) {
-        grouped[item.type] = []
-      }
-      grouped[item.type].push(item)
-      return grouped
-    }, {} as Record<string, Expense[]>)
-  })
+  const expensesByType = computed(() =>
+    Object.groupBy(items.value, (expense: Expense) => expense.type) as Record<Expense['type'], Expense[]>
+  )
 
-  const expenseGroups = computed<ExpenseGroup[]>(() => {
-    return Object.entries(expensesByType.value).map(([type, expenses]) => ({
-      type,
-      expenses
-    }))
-  })
+  getExpenses()
 
   return {
     items,
@@ -59,6 +46,5 @@ export const useExpensesStore = defineStore('expenses', () => {
     removeExpense,
     totalSpent,
     expensesByType,
-    expenseGroups,
   }
 })

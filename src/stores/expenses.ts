@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { Expense, CreateExpenseParams } from '@/types/expense'
+import type { Expense, CreateExpenseParams, ExpenseGroup } from '@/types/expense'
 import * as expenseService from '@/services/localStorageService'
 
 const generateId = () => Math.random().toString(36).substring(2)
@@ -46,14 +46,12 @@ export const useExpensesStore = defineStore('expenses', () => {
     }, {} as Record<string, Expense[]>)
   })
 
-  const getExpensesByDateRange = (startDate: Date, endDate: Date) => {
-    return computed(() => {
-      return items.value.filter((item) => {
-        const itemDate = new Date(item.createdAt)
-        return itemDate >= startDate && itemDate <= endDate
-      })
-    })
-  }
+  const expenseGroups = computed<ExpenseGroup[]>(() => {
+    return Object.entries(expensesByType.value).map(([type, expenses]) => ({
+      type,
+      expenses
+    }))
+  })
 
   return {
     items,
@@ -61,6 +59,6 @@ export const useExpensesStore = defineStore('expenses', () => {
     removeExpense,
     totalSpent,
     expensesByType,
-    getExpensesByDateRange,
+    expenseGroups,
   }
 })

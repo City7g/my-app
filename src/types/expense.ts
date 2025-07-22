@@ -6,4 +6,9 @@ export interface Expense {
   createdAt: string
 }
 
+export interface ExpenseGroup {
+  type: string
+  expenses: Expense[]
+}
+
 export type CreateExpenseParams = Omit<Expense, 'id' | 'createdAt'>

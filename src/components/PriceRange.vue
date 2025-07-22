@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { formatPrice } from '@/utils/formaters'
-import { computed, ref } from 'vue'
 
 const props = defineProps<{
   min?: number
@@ -8,8 +7,6 @@ const props = defineProps<{
   step?: number
   modelValue: number
 }>()
-
-const showSuccess = ref(false)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
@@ -35,7 +32,7 @@ const adjustPrice = (amount: number) => {
 <template>
   <div class="price-range-wrapper">
     <div class="price-range">
-      <h2>Добавление</h2>
+      <h1>Добавление</h1>
       <div class="price-display">
         {{ formatPrice(price) }}
       </div>
@@ -53,9 +50,6 @@ const adjustPrice = (amount: number) => {
           {{ value > 0 ? '+' + value : value }}
         </button>
       </div>
-    </div>
-    <div class="success-message" :class="{ 'show': showSuccess }">
-      Успешно сохранено
     </div>
   </div>
 </template>
@@ -99,9 +93,9 @@ const adjustPrice = (amount: number) => {
   transform: translateY(0);
 }
 
-h2 {
+h1 {
   color: var(--text-color);
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
   margin: 0 0 20px;
   text-align: center;

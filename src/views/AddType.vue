@@ -25,10 +25,8 @@ const handleSubmit = () => {
 
 <template>
   <div class="add-type">
-    <h1>Добавление {{ type }}</h1>
     <div class="add-type-form">
       <div class="form-section">
-        <h2>Стоимость</h2>
         <PriceRange v-model="price" :min="0" :max="1000" :step="1" />
       </div>
       <div class="form-section">

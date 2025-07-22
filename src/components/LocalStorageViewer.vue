@@ -1,73 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { useExpensesStore } from '@/stores/expenses'
 
-interface StorageData {
-  key: string
-  value: string
-  parsedValue?: unknown
-}
-
-const storageData = ref<StorageData[]>([])
-
-const loadStorageData = () => {
-  const data: StorageData[] = []
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i)
-    if (key) {
-      const value = localStorage.getItem(key) || ''
-      let parsedValue
-      try {
-        parsedValue = JSON.parse(value)
-      } catch {
-        parsedValue = value
-      }
-      data.push({ key, value, parsedValue })
-    }
-  }
-  storageData.value = data
-}
-
-const clearStorage = () => {
-  if (confirm('Вы уверены, что хотите очистить все данные?')) {
-    localStorage.clear()
-    loadStorageData()
-  }
-}
-
-const removeItem = (key: string) => {
-  if (confirm(`Удалить "${key}"?`)) {
-    localStorage.removeItem(key)
-    loadStorageData()
-  }
-}
-
-onMounted(() => {
-  loadStorageData()
-})
+const expensesStore = useExpensesStore()
 </script>
 
 <template>
   <div class="storage-viewer">
     <div class="storage-header">
       <h2>Данные LocalStorage</h2>
-      <button @click="clearStorage" class="clear-button">
-        Очистить всё
-      </button>
     </div>
 
-    <div v-if="storageData.length" class="storage-items">
-      <div v-for="item in storageData" :key="item.key" class="storage-item">
+    <div v-if="expensesStore.items.length" class="storage-items">
+      <div v-for="item in expensesStore.items" :key="item.id" class="storage-item">
         <div class="item-header">
-          <div class="item-key">{{ item.key }}</div>
-          <button @click="removeItem(item.key)" class="remove-button">
+          <div class="item-key">{{ item.type }}</div>
+          <button @click="expensesStore.removeExpense(item.id)" class="remove-button">
             Удалить
           </button>
         </div>
-        <pre class="item-value">{{ 
-          item.parsedValue ? 
-            JSON.stringify(item.parsedValue, null, 2) : 
-            item.value 
-        }}</pre>
       </div>
     </div>
 
@@ -167,4 +117,4 @@ onMounted(() => {
   color: #666;
   padding: 48px 0;
 }
-</style> 
+</style>

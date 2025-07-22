@@ -2,11 +2,9 @@
 import { animateStartBlocksHide, animateStartBlocksShow } from '@/animation/start'
 import type { MenuItem } from '@/config/menu'
 
-interface Props {
+defineProps<{
   items: MenuItem[]
-}
-
-defineProps<Props>()
+}>()
 
 onBeforeRouteLeave(async (to, from, next) => {
   await animateStartBlocksHide(
@@ -26,19 +24,10 @@ onMounted(async () => {
 
 <template>
   <div class="grid-menu-container">
-    <RouterLink 
-      v-for="item in items" 
-      :key="item.path"
-      :to="item.path" 
-      class="grid-menu-block"
-      :class="item.class"
-    >
+    <RouterLink v-for="item in items" :key="item.path" :to="item.path" class="grid-menu-block" :class="item.class">
       <SvgIcon :name="item.icon" class="grid-menu-block-icon" />
     </RouterLink>
-    <RouterLink 
-      to="/"
-      class="home-button"
-    >
+    <RouterLink to="/" class="home-button">
       <div class="home-button-inner">
         <SvgIcon name="home" class="grid-menu-block-icon" />
       </div>
@@ -67,7 +56,7 @@ onMounted(async () => {
   height: 120px;
   border-radius: 8px;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
   transition: background-color 0.3s ease;
   will-change: transform;
 }
@@ -154,10 +143,10 @@ onMounted(async () => {
 }
 
 .grid-menu-block:hover {
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .grid-menu-block:hover .grid-menu-block-icon {
   opacity: 1;
 }
-</style> 
+</style>

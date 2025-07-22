@@ -1,10 +1,4 @@
-<template>
-  <div class="svg-icon" v-html="svgContent"></div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-
 const props = defineProps<{
   name: string
 }>()
@@ -21,6 +15,10 @@ onMounted(async () => {
 })
 </script>
 
+<template>
+  <div class="svg-icon" v-html="svgContent" />
+</template>
+
 <style scoped>
 .svg-icon {
   display: inline-flex;
@@ -32,4 +30,4 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
 }
-</style> 
+</style>

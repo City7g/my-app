@@ -1,23 +1,23 @@
-import gsap from "gsap";
+import gsap from 'gsap'
 
 export const animateStartBlocksShow = (
   elements: NodeListOf<Element>,
   homeButton: Element
 ): Promise<void> => {
-  const origins = ["right bottom", "left bottom", "right top", "left top"];
+  const origins = ['right bottom', 'left bottom', 'right top', 'left top']
 
   elements.forEach((block, index) => {
-    gsap.set(block, { transformOrigin: origins[index] });
-  });
+    gsap.set(block, { transformOrigin: origins[index] })
+  })
 
   gsap.set(homeButton, {
     opacity: 0,
     rotation: -180,
     scale: 0,
-    transformOrigin: "center center",
-  });
+    transformOrigin: 'center center',
+  })
 
-  const tl = gsap.timeline();
+  const tl = gsap.timeline()
 
   return new Promise((resolve) => {
     tl.to(homeButton, {
@@ -25,33 +25,36 @@ export const animateStartBlocksShow = (
       rotation: 0,
       scale: 1,
       duration: 0.6,
-      ease: "back.out(1.7)",
+      ease: 'back.out(1.7)',
     }).from(
       elements,
       {
         scale: 0,
         opacity: 0,
         duration: 0.5,
-        stagger: 0.08,
+        stagger: {
+          each: 0.08,
+          from: 'random',
+        },
         onComplete: resolve,
       },
-      "-=0.2"
-    );
-  });
-};
+      '-=0.2'
+    )
+  })
+}
 
 export const animateStartBlocksHide = (
   elements: NodeListOf<Element>,
   homeButton: Element
 ): Promise<void> => {
-  const tl = gsap.timeline();
+  const tl = gsap.timeline()
 
   return new Promise((resolve) => {
     tl.to(elements, {
       scale: 0,
       opacity: 0,
       duration: 0.3,
-      stagger: 0.08,
+      stagger: 0.05,
     }).to(
       homeButton,
       {
@@ -59,10 +62,10 @@ export const animateStartBlocksHide = (
         rotation: 180,
         scale: 0,
         duration: 0.4,
-        ease: "power2.in",
+        ease: 'power2.in',
         onComplete: resolve,
       },
-      "-=0.2"
-    );
-  });
-};
+      '-=0.2'
+    )
+  })
+}

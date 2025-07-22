@@ -1,25 +1,17 @@
 <script setup lang="ts">
 import { useExpensesStore } from '@/stores/expenses'
+import { formatPrice } from '@/utils/formaters'
 
 const expensesStore = useExpensesStore()
-
-const formatPrice = (value: number): string => {
-  const formattedNumber = new Intl.NumberFormat('uk-UA', {
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0
-  }).format(value)
-
-  return `${formattedNumber} ₴`
-}
 </script>
 
 <template>
-  <div class='total-spent'>
-    <div class='total-spent-card'>
-      <div class='total-spent-title'>
+  <div class="total-spent">
+    <div class="total-spent-card">
+      <div class="total-spent-title">
         Всего потрачено:
       </div>
-      <div class='total-spent-amount'>
+      <div class="total-spent-amount">
         {{ formatPrice(expensesStore.totalSpent) }}
       </div>
     </div>

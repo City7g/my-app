@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatPrice } from '@/utils/formaters'
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
@@ -19,29 +20,15 @@ const price = computed({
   set: (value) => emit('update:modelValue', value)
 })
 
-const formatPrice = (value: number): string => {
-  const formattedNumber = new Intl.NumberFormat('uk-UA', {
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0
-  }).format(value)
-  
-  return `${formattedNumber} ₴`
-}
-
 const getBackgroundSize = computed(() => {
   const value = ((price.value - (props.min ?? 0)) * 100) / ((props.max ?? 1000) - (props.min ?? 0))
   return `${value}% 100%`
 })
 
 const adjustPrice = (amount: number) => {
-  const newValue = price.value + amount
-  if (newValue >= (props.min ?? 0) && newValue <= (props.max ?? 1000)) {
-    price.value = newValue
-    showSuccess.value = true
-    setTimeout(() => {
-      showSuccess.value = false
-    }, 2000)
-  }
+  if (price.value + amount < 0) price.value = 0
+  else if (price.value + amount > 1000) price.value = 1000
+  else price.value += amount
 }
 </script>
 
@@ -53,37 +40,21 @@ const adjustPrice = (amount: number) => {
         {{ formatPrice(price) }}
       </div>
       <div class="range-container">
-        <input
-          type="range"
-          :min="min ?? 0"
-          :max="max ?? 1000"
-          :step="step ?? 10"
-          v-model="price"
-          class="range-input"
+        <input type="range" :min="min ?? 0" :max="max ?? 1000" :step="step ?? 10" v-model="price" class="range-input"
           :style="{
             background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${getBackgroundSize}, #E8EDF2 ${getBackgroundSize}, #E8EDF2 100%)`
-          }"
-        >
+          }" />
       </div>
       <div class="quick-adjust">
-        <button 
-          v-for="value in [-10, -5, 5, 10]" 
-          :key="value"
-          @click="adjustPrice(value)"
-          class="adjust-button"
-          :class="{ 
-            'decrease': value < 0,
-            'increase': value > 0
-          }"
-        >
+        <button v-for="value in [-10, -5, 5, 10]" :key="value" @click="adjustPrice(value)" class="adjust-button" :class="{
+          'decrease': value < 0,
+          'increase': value > 0
+        }">
           {{ value > 0 ? '+' + value : value }}
         </button>
       </div>
     </div>
-    <div 
-      class="success-message" 
-      :class="{ 'show': showSuccess }"
-    >
+    <div class="success-message" :class="{ 'show': showSuccess }">
       Успешно сохранено
     </div>
   </div>
@@ -230,4 +201,4 @@ h2 {
 .adjust-button.increase:hover {
   background: var(--primary-dark);
 }
-</style> 
+</style>

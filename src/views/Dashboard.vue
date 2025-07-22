@@ -2,6 +2,7 @@
 import { useExpensesStore } from '@/stores/expenses'
 import { computed } from 'vue'
 import type { Expense } from '@/types/expense'
+import { formatDate, formatPrice } from '@/utils/formaters'
 
 const expensesStore = useExpensesStore()
 
@@ -17,21 +18,6 @@ const expenseGroups = computed<ExpenseGroup[]>(() => {
     expenses
   }))
 })
-
-const formatDate = (dateString: string): string => {
-  return new Date(dateString).toLocaleDateString('uk-UA', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  })
-}
-
-const formatPrice = (value: number): string => {
-  return value.toLocaleString('uk-UA', {
-    style: 'currency',
-    currency: 'UAH'
-  })
-}
 </script>
 
 <template>

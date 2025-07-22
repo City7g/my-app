@@ -1,22 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { CreateExpenseParams, Expense } from '@/types/expense'
+import type { Expense, CreateExpenseParams } from '@/types/expense'
+import * as expenseService from '@/services/localStorageService'
 
 const generateId = () => Math.random().toString(36).substring(2)
 
 export const useExpensesStore = defineStore('expenses', () => {
   const items = ref<Expense[]>([])
 
-  function initializeFromLocalStorage() {
-    const storedItems = localStorage.getItem('items')
-    if (storedItems) {
-      items.value = JSON.parse(storedItems)
-    }
+  const getExpenses = () => {
+    items.value = expenseService.getExpenses()
   }
 
-  initializeFromLocalStorage()
+  getExpenses()
 
-  const createExpense = ({ type, price, description }: CreateExpenseParams): Expense => {
+  const createExpense = ({ type, price, description }: CreateExpenseParams): void => {
     const newItem: Expense = {
       id: generateId(),
       type,
@@ -25,22 +23,13 @@ export const useExpensesStore = defineStore('expenses', () => {
       createdAt: new Date().toISOString(),
     }
 
-    addExpense(newItem)
-    return newItem
-  }
-
-  const addExpense = (expense: Expense) => {
-    items.value.push(expense)
-    saveToLocalStorage()
+    items.value.push(newItem)
+    expenseService.saveExpenses(items.value)
   }
 
   const removeExpense = (id: string) => {
     items.value = items.value.filter((item) => item.id !== id)
-    saveToLocalStorage()
-  }
-
-  const saveToLocalStorage = () => {
-    localStorage.setItem('items', JSON.stringify(items.value))
+    expenseService.saveExpenses(items.value)
   }
 
   const totalSpent = computed(() => {
@@ -68,9 +57,7 @@ export const useExpensesStore = defineStore('expenses', () => {
 
   return {
     items,
-    initializeFromLocalStorage,
     createExpense,
-    addExpense,
     removeExpense,
     totalSpent,
     expensesByType,

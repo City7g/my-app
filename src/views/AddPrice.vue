@@ -6,11 +6,11 @@ const price = ref(50000)
 </script>
 
 <template>
-  <div class='add-price'>
+  <div class="add-price">
     <h1>Добавление прайса</h1>
-    <div class='add-price-form'>
-      <PriceRange v-model='price' :min='1000' :max='200000' :step='1000' />
-      <div class='selected-price'>
+    <div class="add-price-form">
+      <PriceRange v-model="price" :min="1000" :max="200000" :step="1000" />
+      <div class="selected-price">
         Выбранная цена: <strong>{{ price }}</strong>
       </div>
     </div>
@@ -28,7 +28,7 @@ h1 {
   font-size: 24px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 }
 
 .add-price-form {

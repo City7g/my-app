@@ -2,9 +2,6 @@
 import { formatPrice } from '@/utils/formaters'
 
 const props = defineProps<{
-  min?: number
-  max?: number
-  step?: number
   modelValue: number
 }>()
 
@@ -17,15 +14,41 @@ const price = computed({
   set: (value) => emit('update:modelValue', value)
 })
 
-const getBackgroundSize = computed(() => {
-  const value = ((price.value - (props.min ?? 0)) * 100) / ((props.max ?? 1000) - (props.min ?? 0))
+const hundreds = computed({
+  get: () => Math.floor(price.value / 100) * 100,
+  set: (value) => {
+    const numValue = Number(value)
+    if (!isNaN(numValue)) {
+      price.value = numValue + ones.value
+    }
+  }
+})
+
+const ones = computed({
+  get: () => price.value % 100,
+  set: (value) => {
+    const numValue = Number(value)
+    if (!isNaN(numValue)) {
+      price.value = hundreds.value + numValue
+    }
+  }
+})
+
+const getBackgroundSizeHundreds = computed(() => {
+  const value = (hundreds.value * 100) / 900
+  return `${value}% 100%`
+})
+
+const getBackgroundSizeOnes = computed(() => {
+  const value = (ones.value * 100) / 99
   return `${value}% 100%`
 })
 
 const adjustPrice = (amount: number) => {
-  if (price.value + amount < 0) price.value = 0
-  else if (price.value + amount > 1000) price.value = 1000
-  else price.value += amount
+  const newPrice = price.value + amount
+  if (newPrice < 0) price.value = 0
+  else if (newPrice > 999) price.value = 999
+  else price.value = newPrice
 }
 </script>
 
@@ -37,10 +60,16 @@ const adjustPrice = (amount: number) => {
         {{ formatPrice(price) }}
       </div>
       <div class="range-container">
-        <input type="range" :min="min ?? 0" :max="max ?? 1000" :step="step ?? 10" v-model="price" class="range-input"
-          :style="{
-            background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${getBackgroundSize}, #E8EDF2 ${getBackgroundSize}, #E8EDF2 100%)`
-          }" />
+        <label class="range-label">Сотни</label>
+        <input type="range" :min="0" :max="900" :step="100" v-model="hundreds" class="range-input" :style="{
+          background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${getBackgroundSizeHundreds}, #E8EDF2 ${getBackgroundSizeHundreds}, #E8EDF2 100%)`
+        }" />
+      </div>
+      <div class="range-container">
+        <label class="range-label">Единицы</label>
+        <input type="range" :min="0" :max="99" :step="1" v-model="ones" class="range-input" :style="{
+          background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${getBackgroundSizeOnes}, #E8EDF2 ${getBackgroundSizeOnes}, #E8EDF2 100%)`
+        }" />
       </div>
       <div class="quick-adjust">
         <button v-for="value in [-10, -5, 5, 10]" :key="value" @click="adjustPrice(value)" class="adjust-button" :class="{
@@ -106,12 +135,19 @@ h1 {
   font-weight: 700;
   color: var(--primary-color);
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .range-container {
   padding: 0 12px;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+}
+
+.range-label {
+  display: block;
+  color: var(--text-color);
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
 .range-input {
@@ -161,6 +197,7 @@ h1 {
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   padding: 0 4px;
+  margin-top: 24px;
 }
 
 .adjust-button {

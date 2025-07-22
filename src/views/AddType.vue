@@ -55,14 +55,14 @@ h1 {
   font-size: 24px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
 }
 
 h2 {
   font-size: 18px;
   font-weight: 500;
   color: #333;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .add-type-form {
@@ -72,8 +72,11 @@ h2 {
 }
 
 .form-section {
-  padding: 24px;
-  border-bottom: 1px solid #eee;
+  padding: 24px 12px 12px;
+}
+
+.form-section+.form-section+.form-section {
+  padding-top: 0;
 }
 
 .form-section:last-child {

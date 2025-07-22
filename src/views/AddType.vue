@@ -19,7 +19,7 @@ const handleSubmit = () => {
     description: description.value
   })
 
-  router.push('/add')
+  router.replace({ name: 'home' })
 }
 </script>
 

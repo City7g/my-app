@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/Home.vue'
+import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,23 +12,18 @@ const router = createRouter({
     {
       path: '/add',
       name: 'add',
-      component: () => import('@/views/Add.vue'),
+      component: () => import('@/views/AddView.vue'),
     },
     {
       path: '/add/:type',
       name: 'add-type',
-      component: () => import('@/views/AddType.vue'),
+      component: () => import('@/views/AddTypeView.vue'),
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('@/views/Dashboard.vue'),
-    },
-    {
-      path: '/storage',
-      name: 'storage',
-      component: () => import('@/components/LocalStorageViewer.vue'),
-    },
+      component: () => import('@/views/DashboardView.vue'),
+    }
   ],
 })
 

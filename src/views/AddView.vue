@@ -5,7 +5,7 @@ import { addMenuItems } from '@/config/menu'
 <template>
   <main>
     <TotalSpent />
-    <GridMenu :items='addMenuItems' />
+    <GridMenu :items="addMenuItems" />
   </main>
 </template>
 

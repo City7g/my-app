@@ -2,9 +2,12 @@
 import { useExpensesStore } from '@/stores/expenses'
 import { formatPrice } from '@/utils/formaters'
 import type { Expense } from '@/types/expense'
-import ExpenseItem from '@/components/ExpenseItem.vue'
 
 const expensesStore = useExpensesStore()
+
+const getGroupTotal = (expenses: Expense[]) => {
+  return formatPrice(expenses.reduce((sum: number, expense: Expense) => sum + +expense.price, 0))
+}
 </script>
 
 <template>
@@ -24,7 +27,7 @@ const expensesStore = useExpensesStore()
             <h2 class="group-title">{{ type }}</h2>
           </div>
           <div class="group-total">
-            {{formatPrice(expenses.reduce((sum: number, expense: Expense) => sum + +expense.price, 0))}}
+            {{ getGroupTotal(expenses) }}
           </div>
         </div>
 

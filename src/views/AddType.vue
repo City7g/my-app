@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import PriceRange from '@/components/PriceRange.vue'
 import { useExpensesStore } from '@/stores/expenses'
 
 const route = useRoute()

@@ -7,7 +7,7 @@ const router = useRouter()
 const expensesStore = useExpensesStore()
 
 const type = route.params.type
-const price = ref(500)
+const price = ref(route.fullPath === '/add/transport' ? 14 : 500)
 const description = ref('')
 
 const handleSubmit = () => {
@@ -29,7 +29,7 @@ const handleSubmit = () => {
       </div>
       <div class="form-section">
         <h2>Описание</h2>
-        <textarea v-model="description" class="description-input" placeholder="Введите описание..." rows="4" />
+        <textarea v-model="description" class="description-input" placeholder="Введите описание..." rows="3" />
       </div>
       <div class="form-section form-actions">
         <div class="action-container">

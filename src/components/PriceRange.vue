@@ -34,14 +34,8 @@ const ones = computed({
   }
 })
 
-const getBackgroundSizeHundreds = computed(() => {
-  const value = (hundreds.value * 100) / 900
-  return `${value}% 100%`
-})
-
-const getBackgroundSizeOnes = computed(() => {
-  const value = (ones.value * 100) / 99
-  return `${value}% 100%`
+const getGradientStyle = (value: number, max: number) => ({
+  background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${(value * 100) / max}%, #E8EDF2 ${(value * 100) / max}%, #E8EDF2 100%)`
 })
 
 const adjustPrice = (amount: number) => {
@@ -59,18 +53,16 @@ const adjustPrice = (amount: number) => {
       <div class="price-display">
         {{ formatPrice(price) }}
       </div>
-      <div class="range-container">
-        <label class="range-label">Сотни</label>
-        <input type="range" :min="0" :max="900" :step="100" v-model="hundreds" class="range-input" :style="{
-          background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${getBackgroundSizeHundreds}, #E8EDF2 ${getBackgroundSizeHundreds}, #E8EDF2 100%)`
-        }" />
-      </div>
-      <div class="range-container">
-        <label class="range-label">Единицы</label>
-        <input type="range" :min="0" :max="99" :step="1" v-model="ones" class="range-input" :style="{
-          background: `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${getBackgroundSizeOnes}, #E8EDF2 ${getBackgroundSizeOnes}, #E8EDF2 100%)`
-        }" />
-      </div>
+      <label class="range-container">
+        <span class="range-label">Сотни</span>
+        <input type="range" :min="0" :max="900" :step="100" v-model="hundreds" class="range-input"
+          :style="getGradientStyle(hundreds, 900)" />
+      </label>
+      <label class="range-container">
+        <span class="range-label">Единицы</span>
+        <input type="range" :min="0" :max="99" :step="1" v-model="ones" class="range-input"
+          :style="getGradientStyle(ones, 99)" />
+      </label>
       <div class="quick-adjust">
         <button v-for="value in [-10, -5, 5, 10]" :key="value" @click="adjustPrice(value)" class="adjust-button" :class="{
           'decrease': value < 0,

@@ -2,7 +2,7 @@ import type { Expense } from '@/types/expense'
 
 const STORAGE_KEY = 'items'
 
-export function getExpenses(): Expense[] {
+export const getExpenses = (): Expense[] => {
   try {
     const data = localStorage.getItem(STORAGE_KEY)
     return data ? JSON.parse(data) : []
@@ -12,7 +12,7 @@ export function getExpenses(): Expense[] {
   }
 }
 
-export function saveExpenses(expenses: Expense[]): void {
+export const saveExpenses = (expenses: Expense[]): void => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses))
   } catch (error) {

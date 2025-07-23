@@ -12,7 +12,15 @@
     "type-check": "vue-tsc --build",
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
     "lint:eslint": "eslint . --fix",
-    "lint": "run-s lint:*"
+    "lint": "run-s lint:*",
+    "prepare": "npx husky",
+    "test:ci": "vitest run"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "npm run lint",
+      "npm run test:ci"
+    ]
   },
   "dependencies": {
     "gsap": "^3.13.0",
@@ -32,8 +40,10 @@
     "eslint": "^9.29.0",
     "eslint-plugin-oxlint": "~1.1.0",
     "eslint-plugin-vue": "~10.2.0",
+    "husky": "^9.0.11",
     "jiti": "^2.4.2",
     "jsdom": "^26.1.0",
+    "lint-staged": "^15.2.2",
     "npm-run-all2": "^8.0.4",
     "oxlint": "~1.1.0",
     "typescript": "~5.8.0",

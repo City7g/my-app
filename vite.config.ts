@@ -1,10 +1,10 @@
-import { fileURLToPath, URL } from 'node:url'
-
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import { bundleSizePlugin } from './src/config/bundleSize'
 
 export default defineConfig({
   plugins: [
@@ -23,6 +23,7 @@ export default defineConfig({
       deep: true,
     }),
     vueDevTools(),
+    bundleSizePlugin(),
   ],
   resolve: {
     alias: {
